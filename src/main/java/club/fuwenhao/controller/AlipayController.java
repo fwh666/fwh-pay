@@ -22,7 +22,7 @@ import java.util.Map;
 public class AlipayController {
 
     /**支付宝应用设置本地公钥后生成对应的支付宝公钥（非本地生成的公钥）*/
-    private static String alipayPublicKey = "ABCD123";;
+    private static String alipayPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlIu/GE3CbV8DX2TArHvbH9Zna8OfwllEJ2MGoJEG+hrPTAXhf04aALixx9wdo/Q0GmhRYwiQ2mDQZmzGWo5wT1sdwdnAvM8AiSkmdyuy5h3JP51SJ+HZTyFEZgr7jcPe7J1L1zHlVT36Pf7GGEHizGBgp6HHHV+dxF+3NUi6mDxHxyX69lk/jvX2LgpGG+yz6R43DSSR5Y/QqC1r+hBI6TFNYxUoXrp2kVms3LR4kHLzBH1Y/8e/HttAm6CMfeZGOyLjEIyeQcJCLLKid9Y66n9/VuewwoZL1bDeYAWm3pUp+wrjP4aOWD5BOCcpIACGtAaky9cMt8xXdjQW1YdTwQIDAQAB";
 
     @Resource
     private AlipayService alipayService;
