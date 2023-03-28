@@ -30,7 +30,7 @@ public interface AlipayService {
      * @createDate 2023/3/28 16:17
      * @descripton
      */
-    String tradePrecreate();
+    String tradePrecreate(String totalAmount, String subject);
 
     /**
      * 订单号查询
@@ -66,7 +66,7 @@ public interface AlipayService {
      * @return
      * @throws Exception
      */
-    public AlipayTradeQueryResponse queryOrder(String orderId) throws Exception;
+    AlipayTradeQueryResponse queryOrder(String orderId) throws Exception;
 
 
 }

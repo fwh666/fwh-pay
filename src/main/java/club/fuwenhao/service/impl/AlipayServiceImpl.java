@@ -101,7 +101,7 @@ public class AlipayServiceImpl implements AlipayService {
     }
 
     @Override
-    public String tradePrecreate() {
+    public String tradePrecreate(String totalAmount, String subject) {
         AlipayClient alipayClient = new DefaultAlipayClient(gatewayUrl, app_id, merchant_private_key,
                 AlipayConfig.json_type, AlipayConfig.charset, alipay_public_key, AlipayConfig.sign_type);
 
@@ -111,8 +111,8 @@ public class AlipayServiceImpl implements AlipayService {
 
         AlipayTradePrecreateModel model = new AlipayTradePrecreateModel();
         model.setOutTradeNo(String.valueOf(System.currentTimeMillis()));
-        model.setTotalAmount("1.88");
-        model.setSubject("Iphone6 16G");
+        model.setTotalAmount(totalAmount);
+        model.setSubject(subject);
 //        model.setTimeExpire("10m");
         alipayRequest.setBizModel(model);
 
@@ -169,7 +169,6 @@ public class AlipayServiceImpl implements AlipayService {
             }
         } else {
             log.info(JSONObject.toJSONString(alipayTradeQueryResponse));
-//            return alipayTradeQueryResponse.getMsg();
             return alipayTradeQueryResponse.getSubMsg();
         }
         return alipayTradeQueryResponse.getBody();
@@ -197,7 +196,6 @@ public class AlipayServiceImpl implements AlipayService {
     @Override
     public AlipayTradeQueryResponse queryOrder(String orderId) throws Exception {
         log.info("查询支付宝订单，订单编号为：{}", orderId);
-//        AlipayClient alipayClient = new DefaultAlipayClient(aliUrl, aliAppId, aliAppPrivateKey, "json", "utf-8", alipayPublicKey, "RSA2");
         AlipayClient alipayClient = new DefaultAlipayClient(gatewayUrl, app_id, merchant_private_key, "json", "utf-8", alipay_public_key, "RSA2");
         AlipayTradeQueryRequest request = new AlipayTradeQueryRequest();
         AlipayTradeQueryModel model = new AlipayTradeQueryModel();
