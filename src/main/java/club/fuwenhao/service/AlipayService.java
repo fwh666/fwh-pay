@@ -1,7 +1,10 @@
 package club.fuwenhao.service;
 
+import com.alipay.api.AlipayApiException;
 import com.alipay.api.response.AlipayTradeQueryResponse;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -11,14 +14,46 @@ import java.util.Map;
 public interface AlipayService {
 
     /**
-     * 支付宝支付接口
-     * @return
-     * @throws Exception
+     * 网页支付-会跳转到阿里的支付页面
+     *
+     * @param response
+     * @author fuwenhao
+     * @createDate 2023/3/28 15:52
+     * @descripton 网页支付
      */
-    public String newAliOrder() throws Exception;
+    void tradePagePay(HttpServletResponse response);
+
+    /**
+     * 获取二维码支付链接-下单返回链接
+     *
+     * @author fuwenhao
+     * @createDate 2023/3/28 16:17
+     * @descripton
+     */
+    String tradePrecreate();
+
+    /**
+     * 订单号查询
+     *
+     * @author fuwenhao
+     * @createDate 2023/3/28 16:25
+     * @descripton
+     */
+    String tradeQuery(String out_trade_no);
+
+
+//    /**
+//     * 支付宝支付接口
+//     *
+//     * @return
+//     * @throws Exception
+//     */
+//    public String newAliOrder() throws Exception;
+//
 
     /**
      * 扫码付款后支付宝回调接口
+     *
      * @param param
      * @throws Exception
      */
@@ -26,6 +61,7 @@ public interface AlipayService {
 
     /**
      * 查询支付宝订单
+     *
      * @param orderId
      * @return
      * @throws Exception
