@@ -70,15 +70,15 @@ public class AlipayServiceImpl implements AlipayService {
     private FwhOrderRecordService orderRecordService;
 
     @Override
-    public void tradePagePay(String email, HttpServletResponse response) {
+    public void tradePagePay(String email, String orderNo, HttpServletResponse response) {
         AlipayClient alipayClient = new DefaultAlipayClient(gatewayUrl, app_id, merchant_private_key,
                 AlipayConfig.json_type, AlipayConfig.charset, alipay_public_key, AlipayConfig.sign_type);
 
         //设置请求参数
         AlipayTradePagePayRequest alipayRequest = new AlipayTradePagePayRequest();
         AlipayTradePrecreateModel model = new AlipayTradePrecreateModel();
-        String outTradeNo = String.valueOf(System.currentTimeMillis());
-        model.setOutTradeNo(outTradeNo);
+//        String outTradeNo = String.valueOf(System.currentTimeMillis());
+        model.setOutTradeNo(orderNo);
         model.setTotalAmount("19.9");
         model.setSubject("VPN特惠账号");
         model.setProductCode("FAST_INSTANT_TRADE_PAY");
@@ -96,10 +96,10 @@ public class AlipayServiceImpl implements AlipayService {
         //请求
         try {
             AlipayTradePagePayResponse alipayTradePagePayResponse = alipayClient.pageExecute(alipayRequest);
-            log.info("email:{},outTradeNo:{},响应:{}", email, outTradeNo, JSONObject.toJSONString(alipayTradePagePayResponse));
+            log.info("email:{},outTradeNo:{},响应:{}", email, orderNo, JSONObject.toJSONString(alipayTradePagePayResponse));
             //成功入库
             FwhOrderRecord orderRecord = new FwhOrderRecord();
-            orderRecord.setOrderNo(Long.valueOf(outTradeNo)).setOutTradeNo(outTradeNo).setRecipientAccount(email).setStatus(0).setCreateTime(new Date()).setModifiedTime(new Date());
+            orderRecord.setOrderNo(Long.valueOf(orderNo)).setOutTradeNo(orderNo).setRecipientAccount(email).setStatus(0).setCreateTime(new Date()).setModifiedTime(new Date());
             orderRecordService.save(orderRecord);
 
 

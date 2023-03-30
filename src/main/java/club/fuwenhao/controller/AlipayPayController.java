@@ -40,9 +40,9 @@ public class AlipayPayController {
 
 
     @GetMapping("/getWebPay")
-    public void getWebPay(@RequestParam("email") String email, HttpServletResponse response) {
+    public void getWebPay(@RequestParam("email") String email, @RequestParam("orderNo") String orderNo, HttpServletResponse response) {
         if (EmailUtil.isValidEmail(email)) {
-            alipayService.tradePagePay(email, response);
+            alipayService.tradePagePay(email, orderNo, response);
         }
     }
 

@@ -21,7 +21,7 @@ public interface AlipayService {
      * @createDate 2023/3/28 15:52
      * @descripton 网页支付
      */
-    void tradePagePay(String email, HttpServletResponse response);
+    void tradePagePay(String email, String orderNo, HttpServletResponse response);
 
     /**
      * 获取二维码支付链接-下单返回链接
