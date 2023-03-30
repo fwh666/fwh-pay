@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="club.fuwenhao.dao.FwhOrderRecordDao">
+
+    <resultMap type="club.fuwenhao.bean.entity.FwhOrderRecord" id="FwhOrderRecordMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="orderNo" column="order_no" jdbcType="INTEGER"/>
+        <result property="outTradeNo" column="out_trade_no" jdbcType="VARCHAR"/>
+        <result property="recipientAccount" column="recipient_account" jdbcType="VARCHAR"/>
+        <result property="mobile" column="mobile" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="modifiedTime" column="modified_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+</mapper>
+

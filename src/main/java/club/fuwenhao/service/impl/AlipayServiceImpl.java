@@ -1,7 +1,9 @@
 package club.fuwenhao.service.impl;
 
 
+import club.fuwenhao.bean.entity.FwhOrderRecord;
 import club.fuwenhao.config.AlipayConfig;
+import club.fuwenhao.service.FwhOrderRecordService;
 import com.alibaba.fastjson.JSONObject;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
@@ -20,12 +22,15 @@ import club.fuwenhao.consts.AlipayConsts;
 import club.fuwenhao.service.AlipayService;
 import club.fuwenhao.vo.AlipayBean;
 import club.fuwenhao.vo.AlipayJsonRootBean;
+import com.mysql.cj.log.Log;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Date;
 import java.util.Map;
 
 import static club.fuwenhao.config.AlipayConfig.*;
@@ -61,18 +66,21 @@ public class AlipayServiceImpl implements AlipayService {
 //     */
 //    private static String aliNotifyUrl = "http://localhost:8090/alinotify";
 
+    @Autowired
+    private FwhOrderRecordService orderRecordService;
 
     @Override
-    public void tradePagePay(HttpServletResponse response) {
+    public void tradePagePay(String email, HttpServletResponse response) {
         AlipayClient alipayClient = new DefaultAlipayClient(gatewayUrl, app_id, merchant_private_key,
                 AlipayConfig.json_type, AlipayConfig.charset, alipay_public_key, AlipayConfig.sign_type);
 
         //设置请求参数
         AlipayTradePagePayRequest alipayRequest = new AlipayTradePagePayRequest();
         AlipayTradePrecreateModel model = new AlipayTradePrecreateModel();
-        model.setOutTradeNo(String.valueOf(System.currentTimeMillis()));
-        model.setTotalAmount("1.88");
-        model.setSubject("Iphone6 16G");
+        String outTradeNo = String.valueOf(System.currentTimeMillis());
+        model.setOutTradeNo(outTradeNo);
+        model.setTotalAmount("19.9");
+        model.setSubject("VPN特惠账号");
         model.setProductCode("FAST_INSTANT_TRADE_PAY");
         alipayRequest.setBizModel(model);
 
@@ -88,6 +96,13 @@ public class AlipayServiceImpl implements AlipayService {
         //请求
         try {
             AlipayTradePagePayResponse alipayTradePagePayResponse = alipayClient.pageExecute(alipayRequest);
+            log.info("email:{},outTradeNo:{},响应:{}", email, outTradeNo, JSONObject.toJSONString(alipayTradePagePayResponse));
+            //成功入库
+            FwhOrderRecord orderRecord = new FwhOrderRecord();
+            orderRecord.setOrderNo(Long.valueOf(outTradeNo)).setOutTradeNo(outTradeNo).setRecipientAccount(email).setStatus(0).setCreateTime(new Date()).setModifiedTime(new Date());
+            orderRecordService.save(orderRecord);
+
+
             String result = alipayTradePagePayResponse.getBody();
             response.setContentType("text/html;charset=UTF-8");
             PrintWriter out = response.getWriter();

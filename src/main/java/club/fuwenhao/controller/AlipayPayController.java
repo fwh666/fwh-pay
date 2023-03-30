@@ -1,10 +1,17 @@
 package club.fuwenhao.controller;
 
+import club.fuwenhao.bean.entity.FwhOrderRecord;
 import club.fuwenhao.common.ResEntity;
 import club.fuwenhao.config.AlipayConfig;
+import club.fuwenhao.enums.PayStatusEnum;
 import club.fuwenhao.service.AlipayService;
+import club.fuwenhao.service.FwhOrderRecordService;
+import club.fuwenhao.utils.EmailUtil;
+import club.fuwenhao.utils.MailUtil;
 import com.alibaba.fastjson.JSON;
 import com.alipay.api.internal.util.AlipaySignature;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,10 +35,15 @@ import java.util.Map;
 public class AlipayPayController {
     @Resource
     private AlipayService alipayService;
+    @Resource
+    private FwhOrderRecordService orderRecordService;
+
 
     @GetMapping("/getWebPay")
-    public void getWebPay(HttpServletResponse response) {
-        alipayService.tradePagePay(response);
+    public void getWebPay(@RequestParam("email") String email, HttpServletResponse response) {
+        if (EmailUtil.isValidEmail(email)) {
+            alipayService.tradePagePay(email, response);
+        }
     }
 
     @GetMapping("/getPayQrCode")
@@ -52,7 +64,7 @@ public class AlipayPayController {
      * 不返回success，支付宝会在25小时以内完成8次通知（通知的间隔频率一般是：4m,10m,10m,1h,2h,6h,15h）才会结束通知发送。
      */
     @RequestMapping(value = "alinotify")
-    public String aliNotify(HttpServletRequest request) throws Exception {
+    public String aliNotify(HttpServletRequest request, HttpServletResponse response) throws Exception {
         try {
             log.info("进入支付宝回调地址");
             Map<String, String> params = new HashMap<>();
@@ -67,17 +79,28 @@ public class AlipayPayController {
                 }
                 params.put(name, valueStr);
             }
-
             boolean flag = AlipaySignature.rsaCheckV1(params, AlipayConfig.alipay_public_key, "UTF-8", "RSA2");
             if (flag) {
                 alipayService.aliNotify(params);
                 log.info("支付宝通知更改状态成功！");
-                return "success";
+                //更新本地订单状态
+                String outTradeNo = requestParams.get("out_trade_no")[0];
+                orderRecordService.update(new UpdateWrapper<FwhOrderRecord>().lambda().eq(FwhOrderRecord::getOutTradeNo, outTradeNo).set(FwhOrderRecord::getStatus, PayStatusEnum.success.getCode()));
+                //发送邮件
+                FwhOrderRecord orderRecord = orderRecordService.getOne(new LambdaQueryWrapper<FwhOrderRecord>().select(FwhOrderRecord::getRecipientAccount).eq(FwhOrderRecord::getOutTradeNo, outTradeNo));
+                String email = orderRecord.getRecipientAccount();
+                boolean b = MailUtil.sendEmail(email);
+                if (b) {
+                    orderRecordService.update(new UpdateWrapper<FwhOrderRecord>().lambda().eq(FwhOrderRecord::getOutTradeNo, outTradeNo).set(FwhOrderRecord::getStatus, PayStatusEnum.email_succeeded.getCode()));
+                } else {
+                    orderRecordService.update(new UpdateWrapper<FwhOrderRecord>().lambda().eq(FwhOrderRecord::getOutTradeNo, outTradeNo).set(FwhOrderRecord::getStatus, PayStatusEnum.email_failed.getCode()));
+                }
+                return "支付成功";
             }
         } catch (Throwable e) {
             log.error("exception: ", e);
         }
-        return "failure";
+        return "支付失败";
     }
 
 }
