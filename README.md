@@ -8,6 +8,9 @@
 - 账号登录功能-信息购买;
 - 支付宝账号开通;
 - 营业执照注册;
+- 账号批量导入到数据库表zhong
+- https://b.alipay.com/page/ar-center/merchant-sign/form?productCode=I1011000100000000005
+- https://ect.scjgj.beijing.gov.cn/ect/notice.html?code=7dba8f0d-6c1b-3701-8f18-507e0f6d3a18&state=I20
 
 # Maven模板工程
 

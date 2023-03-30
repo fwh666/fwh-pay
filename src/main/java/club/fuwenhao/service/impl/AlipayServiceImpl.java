@@ -43,29 +43,6 @@ import static club.fuwenhao.config.AlipayConfig.*;
 @Service
 public class AlipayServiceImpl implements AlipayService {
 
-//    /**
-//     * //     * 支付宝请求地址
-//     * //
-//     */
-////    private static String aliUrl = "https://openapi.alipay.com/gateway.do";//正式环境
-//    private static String aliUrl = "https://openapi.alipaydev.com/gateway.do";//沙箱环境
-//    /**
-//     * 支付宝应用ID
-//     */
-//    private static String aliAppId = "2021000122669250";
-//    /**
-//     * 本地通过"支付宝开放平台开发助手"生成的私钥
-//     */
-//    private static String aliAppPrivateKey = "MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCRGVXz/jsJP7BRwkc34LZcX034EgMGj1EkiYQa56HXQvZSy77kxUsrvM2F2JmAMulETE62an/7rK8DnM3V6fRIBOJroxk/0tijQe7KQSccHwCjlKkaADvHpcn7TUVnEEoz5mNA5h3EA5WtFpfktNoxiBLTbQZPIIG4wbIkhbHVJKuf8vLNpemmBXMLcOZVRoBFY9UQJ86Quvq/vSI9d3fby7Iw2Ty9O2ulpbPSWtkMmR7VOtu0X7M90qCkPYVGPTPksAU41B7rSVJHL1Zbz3volM+h5hpUCAT5bm+P2L++qNTYb16GPhtZeoOvh0m5Q0q+J34lLcAwbfXSHiiapTxHAgMBAAECggEBAIO0Spe5WR7xB3t+7CQlPYIlI+Gbf9GRfya6CAZf4EBDUNEgjXqcNrpRmv/19ocuLxxGY2Ai1V69hPKzfwa/YHOKs3beSYnsOaYer8A4WWamIW9Z/hBSy/BRZUBNCEUfvSrU4ZzEA5qrYk4FZwQ6wJ8bE3ODz6k9KWJptuh9zkhXqKpsUNb0Ox7b4YEjXcNumj/ROXgX/IvhL5G+ZdyIPxuSMktwnqVpK+JvN1hsiGWUtv5ZCL2EfBYasXK6g5UoGh0+8augXGBZ1WUD5gVo+dKqUCRRqcu1YidS5i9dXyG4ArI1qiWJnBvfpJ88InNpPAUgCZthmhBqjjXaCakxGvkCgYEA5SORVO++nJRp7GmPp1oEr8x8zBSoyri/YgRiPhL14jzY9mKrZT2ycnJkGzK4Mu4vvPeOEQMlj3NT6WrHOXJGAyI7gZTz/g03K/rpF9HkuDaOJ0uKgr2AAjNVLTvAXQ5LPYtirp7oXJPkiwQVO6ZbLySyo9NyGgjEUyPWv7NZ4TUCgYEAohu9Epwldb2LMDtOs1+uW4y7FSWctvnQPvQOvkQIqteQLj2DqCAkGVpjHeYl6Nft2Dt7UIKmV+ur202Img7HLg0cgAxw3MVO0QwKJ6fphQ0tUhj5W0X9wiiay57lR56pGQciTC29mQzGVfk8ZpkXBs7QmFu6osSdpctzd2afMwsCgYEAgcNEuG8U6SN7YPDe840c/lm1ivVgKX26lE2bPUALk1WWIOH74lewSPPTETwF6IHO8xrWj3fSu4w6RwO7UyMN1xR50oaCLqtZRUTQ4DZzaocqtcIn7KZYaeacJAOkio5fubjH59ACEvuF/9wOEjvBg88qg3BpO6kfVV4EbYeqLMkCgYARM3RKhzsKVURxp7lgGyT7HeG0CruoRrWsGGWAFuP8jMcFwQ05R7/M2ORvhb48CL16FkWtc0+HQMCJkp6OCkdkQYvmomtPYbhNQkPJlW2X6qAGeBPtdW3JrllOhdu6T8GNoE4pWyklFk/tS3b3RANHe6ZypDkXkFlSAFaOMtttpQKBgFEz23hFmrESpqkr6+0kLweZMSE8xOXZKvwCGq6nsIRvJMn+jgWFin/Imt7kbLJXhhLb1dxtW1yGhSwUC7bD7UzHIuHkgpepMgT1tl52ZP+yquHUKabn+N3uHgzkldSHXU9JYzzLfGyrrhEEOoD4KQ3eDslZWUwL+nzuRRjt1JA3";
-//    /**
-//     * 支付宝应用设置本地公钥后生成对应的支付宝公钥（非本地生成的公钥）
-//     */
-//    private static String alipayPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlIu/GE3CbV8DX2TArHvbH9Zna8OfwllEJ2MGoJEG+hrPTAXhf04aALixx9wdo/Q0GmhRYwiQ2mDQZmzGWo5wT1sdwdnAvM8AiSkmdyuy5h3JP51SJ+HZTyFEZgr7jcPe7J1L1zHlVT36Pf7GGEHizGBgp6HHHV+dxF+3NUi6mDxHxyX69lk/jvX2LgpGG+yz6R43DSSR5Y/QqC1r+hBI6TFNYxUoXrp2kVms3LR4kHLzBH1Y/8e/HttAm6CMfeZGOyLjEIyeQcJCLLKid9Y66n9/VuewwoZL1bDeYAWm3pUp+wrjP4aOWD5BOCcpIACGtAaky9cMt8xXdjQW1YdTwQIDAQAB";
-//    /**
-//     * 支付宝回调的接口地址
-//     */
-//    private static String aliNotifyUrl = "http://localhost:8090/alinotify";
-
     @Autowired
     private FwhOrderRecordService orderRecordService;
 
@@ -73,17 +50,14 @@ public class AlipayServiceImpl implements AlipayService {
     public void tradePagePay(String email, String orderNo, HttpServletResponse response) {
         AlipayClient alipayClient = new DefaultAlipayClient(gatewayUrl, app_id, merchant_private_key,
                 AlipayConfig.json_type, AlipayConfig.charset, alipay_public_key, AlipayConfig.sign_type);
-
         //设置请求参数
         AlipayTradePagePayRequest alipayRequest = new AlipayTradePagePayRequest();
         AlipayTradePrecreateModel model = new AlipayTradePrecreateModel();
-//        String outTradeNo = String.valueOf(System.currentTimeMillis());
         model.setOutTradeNo(orderNo);
         model.setTotalAmount("19.9");
         model.setSubject("VPN特惠账号");
         model.setProductCode("FAST_INSTANT_TRADE_PAY");
         alipayRequest.setBizModel(model);
-
 
         alipayRequest.setReturnUrl(return_url);
         alipayRequest.setNotifyUrl(notify_url);
@@ -93,7 +67,6 @@ public class AlipayServiceImpl implements AlipayService {
 //                + "\"body\":\"" + body + "\","
 //                + "\"product_code\":\"FAST_INSTANT_TRADE_PAY\"}");
 
-        //请求
         try {
             AlipayTradePagePayResponse alipayTradePagePayResponse = alipayClient.pageExecute(alipayRequest);
             log.info("email:{},outTradeNo:{},响应:{}", email, orderNo, JSONObject.toJSONString(alipayTradePagePayResponse));
@@ -101,7 +74,6 @@ public class AlipayServiceImpl implements AlipayService {
             FwhOrderRecord orderRecord = new FwhOrderRecord();
             orderRecord.setOrderNo(Long.valueOf(orderNo)).setOutTradeNo(orderNo).setRecipientAccount(email).setStatus(0).setCreateTime(new Date()).setModifiedTime(new Date());
             orderRecordService.save(orderRecord);
-
 
             String result = alipayTradePagePayResponse.getBody();
             response.setContentType("text/html;charset=UTF-8");
@@ -128,7 +100,6 @@ public class AlipayServiceImpl implements AlipayService {
         model.setOutTradeNo(String.valueOf(System.currentTimeMillis()));
         model.setTotalAmount(totalAmount);
         model.setSubject(subject);
-//        model.setTimeExpire("10m");
         alipayRequest.setBizModel(model);
 
 //        JSONObject bizContent = new JSONObject();

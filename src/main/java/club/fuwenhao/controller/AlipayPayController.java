@@ -1,10 +1,13 @@
 package club.fuwenhao.controller;
 
+import club.fuwenhao.bean.dto.AccountDto;
+import club.fuwenhao.bean.entity.FwhAccount;
 import club.fuwenhao.bean.entity.FwhOrderRecord;
 import club.fuwenhao.common.ResEntity;
 import club.fuwenhao.config.AlipayConfig;
 import club.fuwenhao.enums.PayStatusEnum;
 import club.fuwenhao.service.AlipayService;
+import club.fuwenhao.service.FwhAccountService;
 import club.fuwenhao.service.FwhOrderRecordService;
 import club.fuwenhao.utils.EmailUtil;
 import club.fuwenhao.utils.MailUtil;
@@ -13,6 +16,7 @@ import com.alipay.api.internal.util.AlipaySignature;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,7 +25,9 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -37,6 +43,8 @@ public class AlipayPayController {
     private AlipayService alipayService;
     @Resource
     private FwhOrderRecordService orderRecordService;
+    @Resource
+    private FwhAccountService accountService;
 
 
     @GetMapping("/getWebPay")
@@ -89,13 +97,20 @@ public class AlipayPayController {
                 //发送邮件
                 FwhOrderRecord orderRecord = orderRecordService.getOne(new LambdaQueryWrapper<FwhOrderRecord>().select(FwhOrderRecord::getRecipientAccount).eq(FwhOrderRecord::getOutTradeNo, outTradeNo));
                 String email = orderRecord.getRecipientAccount();
-                boolean b = MailUtil.sendEmail(email);
+                //获取要发送的账号
+                List<FwhAccount> accounts = accountService.list(new LambdaQueryWrapper<FwhAccount>().eq(FwhAccount::getStatus, 0));
+                if (CollectionUtils.isEmpty(accounts)) {
+                    return "支付成功,账号售罄,请联系管理员767137738退款";
+                }
+                FwhAccount account = accounts.get(0);
+                boolean b = MailUtil.sendEmail(email, new AccountDto().setAccount(account.getAccount()).setPassword(account.getPassword()));
                 if (b) {
-                    orderRecordService.update(new UpdateWrapper<FwhOrderRecord>().lambda().eq(FwhOrderRecord::getOutTradeNo, outTradeNo).set(FwhOrderRecord::getStatus, PayStatusEnum.email_succeeded.getCode()));
+                    orderRecordService.update(new UpdateWrapper<FwhOrderRecord>().lambda().eq(FwhOrderRecord::getOutTradeNo, outTradeNo).set(FwhOrderRecord::getStatus, PayStatusEnum.email_succeeded.getCode()).set(FwhOrderRecord::getAccount, account.getAccount()));
+                    return "支付成功,请查看邮箱📮";
                 } else {
                     orderRecordService.update(new UpdateWrapper<FwhOrderRecord>().lambda().eq(FwhOrderRecord::getOutTradeNo, outTradeNo).set(FwhOrderRecord::getStatus, PayStatusEnum.email_failed.getCode()));
+                    return "支付成功,邮件未成功发送,联系售后QQ:767137738";
                 }
-                return "支付成功";
             }
         } catch (Throwable e) {
             log.error("exception: ", e);

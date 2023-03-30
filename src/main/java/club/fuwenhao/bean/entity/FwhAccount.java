@@ -9,42 +9,30 @@ import java.util.Date;
 import java.io.Serializable;
 
 /**
- * 支付订单记录表(FwhOrderRecord)实体类
+ * 账号表(FwhAccount)实体类
  *
  * @author makejava
- * @since 2023-03-30 12:00:44
+ * @since 2023-03-30 22:51:20
  */
 @Data
 @Accessors(chain = true)
-public class FwhOrderRecord implements Serializable {
-    private static final long serialVersionUID = -23973952716298301L;
+public class FwhAccount implements Serializable {
+    private static final long serialVersionUID = -85337679380191962L;
     /**
      * 主键ID
      */
     @TableId(type = IdType.AUTO)
     private Long id;
     /**
-     * 订单号
-     */
-    private Long orderNo;
-    /**
-     * 支付宝交易订单号
-     */
-    private String outTradeNo;
-    /**
-     * 收件人邮箱
-     */
-    private String recipientAccount;
-    /**
-     * 手机号
-     */
-    private String mobile;
-    /**
      * 邮箱账号
      */
     private String account;
     /**
-     * 状态 0-创建 1-支付成功 2-支付失败
+     * 邮箱账号密码
+     */
+    private String password;
+    /**
+     * 出售状态
      */
     private Integer status;
     /**
@@ -55,6 +43,7 @@ public class FwhOrderRecord implements Serializable {
      * 修改时间
      */
     private Date modifiedTime;
+
 
 }
 
