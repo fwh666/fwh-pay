@@ -16,6 +16,7 @@ import com.alipay.api.internal.util.AlipaySignature;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,6 +46,9 @@ public class AlipayPayController {
     private FwhOrderRecordService orderRecordService;
     @Resource
     private FwhAccountService accountService;
+
+    @Value("${Alipay.alipay_public_key}")
+    private String alipay_public_key;
 
 
     @GetMapping("/getWebPay")
@@ -87,7 +91,7 @@ public class AlipayPayController {
                 }
                 params.put(name, valueStr);
             }
-            boolean flag = AlipaySignature.rsaCheckV1(params, AlipayConfig.alipay_public_key, "UTF-8", "RSA2");
+            boolean flag = AlipaySignature.rsaCheckV1(params, alipay_public_key, "UTF-8", "RSA2");
             if (flag) {
                 alipayService.aliNotify(params);
                 log.info("支付宝通知更改状态成功！");

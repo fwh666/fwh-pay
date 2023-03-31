@@ -11,16 +11,18 @@ CREATE TABLE `fwh_order_record`
     `modified_time`     timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
     PRIMARY KEY (`id`),
     KEY                 `idx_outTradeNo` (`out_trade_no`) USING BTREE COMMENT '交易订单号索引'
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='支付订单记录表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='支付订单记录表';
 
 
 CREATE TABLE `fwh_account`
 (
-    `id`            bigint NOT NULL COMMENT '主键ID',
-    `account`       varchar(255) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '邮箱账号',
-    `password`      varchar(255) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '邮箱账号密码',
-    `status`        tinyint                          DEFAULT '0' COMMENT '状态 0-未出售 1-已出售',
+    `id`            bigint NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `account`       varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '邮箱账号',
+    `password`      varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '邮箱账号密码',
+    `status`        tinyint                                                DEFAULT '0' COMMENT '状态 0-未出售 1-已出售',
     `create_time`   timestamp NULL DEFAULT NULL COMMENT '创建时间',
     `modified_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='账号表';
+ET
+=utf8mb4 COLLATE=utf8mb4_bin COMMENT='账号表';

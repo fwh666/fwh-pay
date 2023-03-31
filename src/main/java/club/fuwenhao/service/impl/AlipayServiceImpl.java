@@ -30,8 +30,6 @@ import java.io.PrintWriter;
 import java.util.Date;
 import java.util.Map;
 
-import static club.fuwenhao.config.AlipayConfig.*;
-
 /**
  * @author tony
  * @date 2020/8/19 13:42
@@ -44,6 +42,14 @@ public class AlipayServiceImpl implements AlipayService {
     private String notify_url;
     @Value("${Alipay.return_url}")
     private String return_url;
+    @Value("${Alipay.gateway_url}")
+    private String gatewayUrl;
+    @Value("${Alipay.app_id}")
+    private String app_id;
+    @Value("${Alipay.merchant_private_key}")
+    private String merchant_private_key;
+    @Value("${Alipay.alipay_public_key}")
+    private String alipay_public_key;
 
     @Autowired
     private FwhOrderRecordService orderRecordService;
@@ -80,7 +86,7 @@ public class AlipayServiceImpl implements AlipayService {
             String result = alipayTradePagePayResponse.getBody();
             response.setContentType("text/html;charset=UTF-8");
             PrintWriter out = response.getWriter();
-            log.info(JSONObject.toJSONString(alipayTradePagePayResponse));
+            log.info(result);
             out.write(result);
             out.close();
         } catch (Exception e) {
@@ -130,7 +136,7 @@ public class AlipayServiceImpl implements AlipayService {
     @Override
     public String tradeQuery(String out_trade_no) {
         //获得初始化的AlipayClient
-        AlipayClient alipayClient = new DefaultAlipayClient(AlipayConfig.gatewayUrl, AlipayConfig.app_id, AlipayConfig.merchant_private_key, AlipayConfig.json_type, AlipayConfig.charset, AlipayConfig.alipay_public_key, AlipayConfig.sign_type);
+        AlipayClient alipayClient = new DefaultAlipayClient(gatewayUrl, app_id, merchant_private_key, AlipayConfig.json_type, AlipayConfig.charset, alipay_public_key, AlipayConfig.sign_type);
 
         //设置请求参数
         AlipayTradeQueryRequest alipayRequest = new AlipayTradeQueryRequest();
