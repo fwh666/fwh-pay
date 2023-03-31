@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,14 +24,24 @@ public class AccountController {
 
     @GetMapping("/insertBatch")
     private boolean insertBatch() {
-        FwhAccount account = new FwhAccount();
         List<FwhAccount> accountList = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            //todo-fwh-添加数据
-            account.setAccount(String.valueOf(i)).setPassword("test").setCreateTime(new Date());
-            accountList.add(account);
+
+        String fileName = "/export/applogs/schedule-vpn/account.txt";
+        File file = new File(fileName);
+        try {
+            //考虑到编码格式
+            InputStreamReader read = new InputStreamReader(new FileInputStream(file), "utf-8");
+            BufferedReader bu = new BufferedReader(read);
+            String lineText = null;
+            while ((lineText = bu.readLine()) != null) {
+                FwhAccount account = new FwhAccount();
+                String emailParam = lineText.trim();
+                account.setAccount(emailParam).setPassword("PaI3QXq26obxVri").setCreateTime(new Date());
+                accountList.add(account);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        boolean b = accountService.saveBatch(accountList);
-        return b;
+        return accountService.saveBatch(accountList);
     }
 }
