@@ -3,6 +3,10 @@ package club.fuwenhao.service.impl;
 
 import club.fuwenhao.bean.entity.FwhOrderRecord;
 import club.fuwenhao.config.AlipayConfig;
+import club.fuwenhao.config.ApiException;
+import club.fuwenhao.config.RetEnum;
+import club.fuwenhao.consts.AlipayConsts;
+import club.fuwenhao.service.AlipayService;
 import club.fuwenhao.service.FwhOrderRecordService;
 import com.alibaba.fastjson.JSONObject;
 import com.alipay.api.AlipayApiException;
@@ -16,19 +20,12 @@ import com.alipay.api.request.AlipayTradeQueryRequest;
 import com.alipay.api.response.AlipayTradePagePayResponse;
 import com.alipay.api.response.AlipayTradePrecreateResponse;
 import com.alipay.api.response.AlipayTradeQueryResponse;
-import club.fuwenhao.config.ApiException;
-import club.fuwenhao.config.RetEnum;
-import club.fuwenhao.consts.AlipayConsts;
-import club.fuwenhao.service.AlipayService;
-import club.fuwenhao.vo.AlipayBean;
-import club.fuwenhao.vo.AlipayJsonRootBean;
-import com.mysql.cj.log.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
 import java.util.Map;
@@ -42,6 +39,11 @@ import static club.fuwenhao.config.AlipayConfig.*;
 @Slf4j
 @Service
 public class AlipayServiceImpl implements AlipayService {
+
+    @Value("${Alipay.notify_url}")
+    private String notify_url;
+    @Value("${Alipay.return_url}")
+    private String return_url;
 
     @Autowired
     private FwhOrderRecordService orderRecordService;

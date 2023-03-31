@@ -16,4 +16,8 @@ public class AccountDto {
      */
     private String account;
     private String password;
+    /**
+     * 账号登陆地址
+     */
+    private String loginUrl = "https://go.runba.cyou/auth/login";
 }

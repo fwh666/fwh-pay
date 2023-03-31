@@ -46,6 +46,7 @@ public class MailUtil {
                 "<p>您好，</p>\n" +
                 "<p>这是您购买的VPN账号信息。</p>\n" +
                 "<ul>\n" +
+                "    <li>登陆地址: " + accountDto.getLoginUrl() + "</li>\n" +
                 "    <li>账号: " + accountDto.getAccount() + "</li>\n" +
                 "    <li>密码: " + accountDto.getPassword() + "</li>\n" +
                 "</ul>\n" +
