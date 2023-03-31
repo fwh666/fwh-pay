@@ -24,5 +24,3 @@ CREATE TABLE `fwh_account`
     `modified_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='账号表';
-ET
-=utf8mb4 COLLATE=utf8mb4_bin COMMENT='账号表';

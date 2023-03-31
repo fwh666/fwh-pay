@@ -78,7 +78,7 @@ public class AlipayServiceImpl implements AlipayService {
         try {
             AlipayTradePagePayResponse alipayTradePagePayResponse = alipayClient.pageExecute(alipayRequest);
             log.info("email:{},outTradeNo:{},响应:{}", email, orderNo, JSONObject.toJSONString(alipayTradePagePayResponse));
-            //成功入库
+//            //成功入库
             FwhOrderRecord orderRecord = new FwhOrderRecord();
             orderRecord.setOrderNo(Long.valueOf(orderNo)).setOutTradeNo(orderNo).setRecipientAccount(email).setStatus(0).setCreateTime(new Date()).setModifiedTime(new Date());
             orderRecordService.save(orderRecord);
@@ -86,7 +86,6 @@ public class AlipayServiceImpl implements AlipayService {
             String result = alipayTradePagePayResponse.getBody();
             response.setContentType("text/html;charset=UTF-8");
             PrintWriter out = response.getWriter();
-            log.info(result);
             out.write(result);
             out.close();
         } catch (Exception e) {
@@ -99,7 +98,6 @@ public class AlipayServiceImpl implements AlipayService {
     public String tradePrecreate(String totalAmount, String subject) {
         AlipayClient alipayClient = new DefaultAlipayClient(gatewayUrl, app_id, merchant_private_key,
                 AlipayConfig.json_type, AlipayConfig.charset, alipay_public_key, AlipayConfig.sign_type);
-
         AlipayTradePrecreateRequest alipayRequest = new AlipayTradePrecreateRequest();
         alipayRequest.setReturnUrl(return_url);
         alipayRequest.setNotifyUrl(notify_url);

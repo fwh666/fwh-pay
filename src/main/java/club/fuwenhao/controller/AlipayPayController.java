@@ -110,6 +110,7 @@ public class AlipayPayController {
                 boolean b = MailUtil.sendEmail(email, new AccountDto().setAccount(account.getAccount()).setPassword(account.getPassword()));
                 if (b) {
                     orderRecordService.update(new UpdateWrapper<FwhOrderRecord>().lambda().eq(FwhOrderRecord::getOutTradeNo, outTradeNo).set(FwhOrderRecord::getStatus, PayStatusEnum.email_succeeded.getCode()).set(FwhOrderRecord::getAccount, account.getAccount()));
+                    accountService.update(new UpdateWrapper<FwhAccount>().lambda().eq(FwhAccount::getAccount, account.getAccount()).set(FwhAccount::getStatus, 1));
                     return "支付成功,请查看邮箱📮";
                 } else {
                     orderRecordService.update(new UpdateWrapper<FwhOrderRecord>().lambda().eq(FwhOrderRecord::getOutTradeNo, outTradeNo).set(FwhOrderRecord::getStatus, PayStatusEnum.email_failed.getCode()));

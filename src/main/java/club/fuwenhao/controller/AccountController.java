@@ -25,7 +25,6 @@ public class AccountController {
     @GetMapping("/insertBatch")
     private boolean insertBatch() {
         List<FwhAccount> accountList = new ArrayList<>();
-
         String fileName = "/export/applogs/schedule-vpn/account.txt";
         File file = new File(fileName);
         try {
