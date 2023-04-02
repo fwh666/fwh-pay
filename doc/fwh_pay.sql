@@ -1,3 +1,6 @@
+CREATE DATABASE `fwh_pay` CHARACTER SET `utf8mb4`;
+
+
 CREATE TABLE `fwh_order_record`
 (
     `id`                bigint NOT NULL AUTO_INCREMENT COMMENT '主键ID',
@@ -24,3 +27,5 @@ CREATE TABLE `fwh_account`
     `modified_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='账号表';
+
+INSERT INTO `fwh_pay`.`fwh_account` (`id`, `account`, `password`, `status`, `create_time`, `modified_time`) VALUES (3114, 'ElonMusk269899@lista.cc', 'PaI3QXq26obxVri', 0, '2023-03-31 15:12:51', '2023-04-01 18:55:45');
